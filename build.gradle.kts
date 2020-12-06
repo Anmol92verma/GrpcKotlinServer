@@ -16,28 +16,19 @@ repositories {
     maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-extra["springCloudGcpVersion"] = "2.0.0-RC2"
-extra["springCloudVersion"] = "2020.0.0-M6"
-
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation("com.twilio.sdk:twilio:7.47.2")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.google.cloud:spring-cloud-gcp-starter")
-    implementation("com.google.cloud:spring-cloud-gcp-starter-pubsub")
-    implementation("com.google.cloud:spring-cloud-gcp-starter-storage")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.session:spring-session-core")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("com.google.cloud:spring-cloud-gcp-dependencies:${property("springCloudGcpVersion")}")
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
 }
 
 tasks.withType<KotlinCompile> {
