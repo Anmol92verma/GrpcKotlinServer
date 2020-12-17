@@ -1,10 +1,44 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.google.protobuf.gradle.*
 
 plugins {
-    id("org.springframework.boot") version "2.4.0"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    application
+    id("com.google.protobuf") version "0.8.14"
     kotlin("jvm") version "1.4.10"
-    kotlin("plugin.spring") version "1.4.10"
+}
+
+
+
+sourceSets.main {
+    withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
+        kotlin.srcDirs("build/generated/source/proto/main/grpc","build/generated/source/proto/main/grpckt", "build/generated/source/proto/main/java")
+    }
+}
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.10.1"
+    }
+
+    plugins {
+        id("grpc") {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.32.1"
+        }
+        id("grpckt") {
+            artifact = "io.grpc:protoc-gen-grpc-kotlin:0.1.5"
+        }
+    }
+
+    generateProtoTasks {
+        ofSourceSet("main").forEach {
+            it.plugins {
+                // Apply the "grpc" plugin whose spec is defined above, without options.
+                id("grpc")
+                id("grpckt")
+            }
+        }
+    }
 }
 
 group = "com.mutualmobile"
@@ -12,25 +46,24 @@ version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    jcenter()
+    google()
     maven { url = uri("https://repo.spring.io/milestone") }
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    implementation("org.springframework.boot:spring-boot-starter-data-rest")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("io.springfox:springfox-boot-starter:3.0.0")
-    implementation("io.springfox:springfox-swagger-ui:2.9.2")
+    implementation("io.grpc:grpc-netty-shaded:1.34.1")
+    implementation("io.grpc:grpc-protobuf:1.34.1")
+    implementation("io.grpc:grpc-kotlin-stub:1.0.0")
+
+    implementation("com.google.protobuf:protobuf-java:3.8.0")
 
     implementation("com.twilio.sdk:twilio:7.47.2")
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.springframework.session:spring-session-core")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<KotlinCompile> {
@@ -38,6 +71,20 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "1.8"
     }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.mutualmobile.whatsappclone.WhatsappcloneApplication"
+    }
+
+    // To add all of the dependencies
+    from(sourceSets.main.get().output)
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
 }
 
 tasks.withType<Test> {

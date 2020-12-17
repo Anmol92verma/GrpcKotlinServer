@@ -1,26 +1,17 @@
 package com.mutualmobile.whatsappclone
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Bean
-import springfox.documentation.builders.PathSelectors
-import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spring.web.plugins.Docket
-import springfox.documentation.swagger2.annotations.EnableSwagger2
+import com.mutualmobile.whatsappclone.signup.AuthServiceImpl
+import io.grpc.Server
+import io.grpc.ServerBuilder
 
-@SpringBootApplication
-@EnableSwagger2
-class WhatsappcloneApplication{
-    @Bean
-    fun api(): Docket {
-        return Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build()
+object WhatsappcloneApplication {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val server: Server = ServerBuilder
+                .forPort(8080)
+                .addService(AuthServiceImpl()).build()
+
+        server.start()
+        server.awaitTermination()
     }
-}
-
-fun main(args: Array<String>) {
-    runApplication<WhatsappcloneApplication>(*args)
 }
