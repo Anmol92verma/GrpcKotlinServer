@@ -57,11 +57,13 @@ dependencies {
     implementation("io.grpc:grpc-netty-shaded:1.34.1")
     implementation("io.grpc:grpc-protobuf:1.34.1")
     implementation("io.grpc:grpc-kotlin-stub:1.0.0")
-
     implementation("com.google.protobuf:protobuf-java:3.8.0")
 
     implementation("com.twilio.sdk:twilio:7.47.2")
 
+    implementation("org.mongodb:mongodb-driver-sync:3.10.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
@@ -75,7 +77,7 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "com.mutualmobile.whatsappclone.WhatsappcloneApplication"
+        attributes["Main-Class"] = "com.mutualmobile.whatsappclone.MainGrpcServer"
     }
 
     // To add all of the dependencies
