@@ -4,7 +4,7 @@ import com.mutualmobile.whatsappclone.signup.AuthServiceImpl
 import io.grpc.Server
 import io.grpc.ServerBuilder
 
-object WhatsappcloneApplication {
+object MainGrpcServer {
     @JvmStatic
     fun main(args: Array<String>) {
         val server: Server = ServerBuilder
