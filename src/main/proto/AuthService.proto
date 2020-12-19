@@ -1,20 +1,25 @@
 syntax = "proto3";
 
 option java_package = "com.mutualmobile.whatsappclone.signup";
-option java_outer_classname = "OuterSample";
+option java_outer_classname = "Auth";
 option java_multiple_files = true;
 
 
-message SignupRequest {
-  string fullName = 1;
-  string userName = 2;
+message AuthRequest {
+  string phoneNumber = 1;
 }
 
-message SignupResponse {
+message AuthResponse {
   int32 code = 1;
   string message = 2;
 }
 
+message AuthVerify{
+  string phoneNumber = 1;
+  string code = 2;
+}
+
 service AuthService {
-  rpc authorize(SignupRequest) returns (SignupResponse);
+  rpc authorize(AuthRequest) returns (AuthResponse);
+  rpc verifyOtp(AuthVerify) returns (AuthResponse);
 }

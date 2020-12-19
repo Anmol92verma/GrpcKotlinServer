@@ -7,8 +7,6 @@ plugins {
     kotlin("jvm") version "1.4.10"
 }
 
-
-
 sourceSets.main {
     withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
         kotlin.srcDirs("build/generated/source/proto/main/grpc","build/generated/source/proto/main/grpckt", "build/generated/source/proto/main/java")
@@ -59,7 +57,8 @@ dependencies {
     implementation("io.grpc:grpc-kotlin-stub:1.0.0")
     implementation("com.google.protobuf:protobuf-java:3.8.0")
 
-    implementation("com.twilio.sdk:twilio:7.47.2")
+    implementation("com.twilio.sdk:twilio:8.5.1")
+    implementation("com.google.guava:guava:30.1-jre")
 
     implementation("org.mongodb:mongodb-driver-sync:3.10.1")
 
