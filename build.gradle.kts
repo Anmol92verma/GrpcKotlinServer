@@ -62,6 +62,8 @@ dependencies {
 
     implementation("org.mongodb:mongodb-driver-sync:3.10.1")
 
+    runtimeOnly("io.netty:netty-tcnative-boringssl-static:2.0.25.Final")
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
