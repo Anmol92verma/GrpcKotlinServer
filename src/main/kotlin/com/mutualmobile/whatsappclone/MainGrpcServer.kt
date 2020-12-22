@@ -19,11 +19,12 @@ object MainGrpcServer {
 
     ServerBuilder
         .forPort(8443)
-        .useTransportSecurity(File(certChainFilePath), File(privateKeyFilePath))
+       .useTransportSecurity(File(certChainFilePath), File(privateKeyFilePath))
         .addService(AuthServiceImpl(mongoCollection))
         .build().apply {
           start()
           awaitTermination()
+          println("running on ${this.port}")
         }
   }
 }
