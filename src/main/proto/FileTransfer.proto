@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_package = "com.mutualmobile.whatsappclone.files";
+option java_multiple_files = true;
+
+
+message FileUploadType {
+  string fileName = 1;
+  bytes fileData = 2;
+}
+
+message FileUploadResponseMessage{
+  bool success = 1;
+}
+
+message FileDownloadRequestMessage{
+  string fileName = 1;
+}
+
+message FileDownloadResponseMessage{
+  bytes fileData = 1;
+}
+
+service FileTransferService {
+  rpc uploadFile(stream FileUploadType) returns (FileUploadResponseMessage);
+  rpc downloadFile(FileDownloadRequestMessage) returns (stream FileDownloadResponseMessage);
+}
