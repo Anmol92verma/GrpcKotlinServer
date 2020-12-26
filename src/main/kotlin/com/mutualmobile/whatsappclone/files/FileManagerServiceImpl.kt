@@ -12,29 +12,34 @@ class FileManagerServiceImpl :
   override suspend fun uploadFile(requests: Flow<FileUploadType>): FileUploadResponseMessage {
     val cwd = System.getProperty("user.dir")
     println("Current working directory : $cwd")
+    val fileDir = File(cwd + File.separator + "images")
+    if (!fileDir.exists()) {
+      println("mk dirs")
+      fileDir.mkdirs()
+    }
+    var file: File? = null
+    var fos: FileOutputStream? = null
     requests.flowOn(Dispatchers.IO).collect {
-      try{
-
-        val fileDir = File(cwd + File.separator + "images")
-        if (!fileDir.exists()) {
-          println("mk dirs")
-          fileDir.mkdirs()
-        }
-        val file = (File(fileDir, it.fileName))
-        if (!file.exists()) {
+      try {
+        file = (File(fileDir, it.fileName))
+        if (!file!!.exists()) {
           println("mk createNewFile")
-          file.createNewFile()
+          file!!.createNewFile()
         }
-        val fos = FileOutputStream(file)
-        fos.write(it.fileData.toByteArray(), file.length().toInt(),it.fileData.size())
+        if (fos == null) {
+          fos = FileOutputStream(file)
+        }
+
+        fos?.write(it.fileData.toByteArray())
         println("writing byte ${it.fileData}")
 
-        fos.close()
-      }catch (ex:Exception){
+
+      } catch (ex: Exception) {
         ex.printStackTrace()
       }
     }
-    println("written all bytes")
+    println("written all bytes ${file!!.length()}")
+    fos?.close()
     return FileUploadResponseMessage.newBuilder().apply {
       this.success = true
     }.build()
