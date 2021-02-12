@@ -2,6 +2,7 @@ package com.mutualmobile.whatsappclone
 
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
+import com.mutualmobile.whatsappclone.files.FileManagerServiceImpl
 import com.mutualmobile.whatsappclone.signup.AuthServiceImpl
 import io.grpc.ServerBuilder
 import org.bson.Document
@@ -21,6 +22,7 @@ object MainGrpcServer {
         .forPort(8443)
        .useTransportSecurity(File(certChainFilePath), File(privateKeyFilePath))
         .addService(AuthServiceImpl(mongoCollection))
+        .addService(FileManagerServiceImpl())
         .build().apply {
           start()
           awaitTermination()
