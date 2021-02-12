@@ -10,41 +10,37 @@ import java.io.FileOutputStream
 class FileManagerServiceImpl :
     FileTransferServiceGrpcKt.FileTransferServiceCoroutineImplBase(coroutineContext = Dispatchers.IO) {
   override suspend fun uploadFile(requests: Flow<FileUploadType>): FileUploadResponseMessage {
-    val fileDir = getFilesDir()
     requests.flowOn(Dispatchers.IO).collect {
-      writeBytesToFile(fileDir)
+      writeBytesToFile(it)
     }
     return FileUploadResponseMessage.newBuilder().apply {
       this.success = true
     }.build()
   }
 
-  private fun writeBytesToFile(fileDir: Unit) {
-    var file: File? = null
+  private fun writeBytesToFile(it: FileUploadType) {
+    val fileDir = getFilesDir()
+
     var fos: FileOutputStream? = null
     try {
-      file = (File(fileDir, it.fileName))
-      if (!file!!.exists()) {
+      val file = File(fileDir, it.fileName)
+      if (!file.exists()) {
         println("mk createNewFile")
-        file!!.createNewFile()
+        file.createNewFile()
       }
       if (fos == null) {
         fos = FileOutputStream(file)
       }
 
-      fos?.write(it.fileData.toByteArray())
-      println("writing byte ${it.fileData}")
-
-
+      fos.write(it.fileData.toByteArray())
     } catch (ex: Exception) {
       ex.printStackTrace()
     } finally {
       fos?.close()
     }
-    println("written all bytes ${file!!.length()}")
   }
 
-  private fun getFilesDir() {
+  private fun getFilesDir(): File {
     val cwd = System.getProperty("user.dir")
     println("Current working directory : $cwd")
     val fileDir = File(cwd + File.separator + "images")
