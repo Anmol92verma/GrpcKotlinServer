@@ -5,6 +5,7 @@ plugins {
     application
     id("com.google.protobuf") version "0.8.14"
     kotlin("jvm") version "1.4.10"
+    kotlin("kapt") version "1.4.21"
 }
 
 sourceSets.main {
@@ -59,8 +60,11 @@ dependencies {
 
     implementation("com.twilio.sdk:twilio:8.5.1")
     implementation("com.google.guava:guava:30.1-jre")
-
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
     implementation("org.mongodb:mongodb-driver-sync:3.10.1")
+
+    api("com.google.dagger:dagger:2.30.1")
+    kapt("com.google.dagger:dagger-compiler:2.30.1")
 
     runtimeOnly("io.netty:netty-tcnative-boringssl-static:2.0.25.Final")
 

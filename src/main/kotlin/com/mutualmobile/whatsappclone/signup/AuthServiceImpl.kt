@@ -2,6 +2,7 @@ package com.mutualmobile.whatsappclone.signup
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
+import com.mutualmobile.whatsappclone.di.qualifiers.UsersMongoCollection
 import com.mutualmobile.whatsappclone.models.User
 import com.mutualmobile.whatsappclone.models.toAppUser
 import com.mutualmobile.whatsappclone.models.toDocument
@@ -9,8 +10,16 @@ import com.mutualmobile.whatsappclone.sms.SmsSender
 import kotlinx.coroutines.Dispatchers
 import org.bson.Document
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AuthServiceImpl(private val mongoCollection: MongoCollection<Document>) : AuthServiceGrpcKt.AuthServiceCoroutineImplBase(coroutineContext = Dispatchers.IO) {
+@Singleton
+class AuthServiceImpl @Inject constructor() :
+  AuthServiceGrpcKt.AuthServiceCoroutineImplBase(coroutineContext = Dispatchers.IO) {
+
+  @Inject
+  @UsersMongoCollection
+  lateinit var mongoCollection: MongoCollection<Document>
 
   override suspend fun verifyOtp(request: AuthVerify): AuthResponse {
     return try {
@@ -60,18 +69,20 @@ class AuthServiceImpl(private val mongoCollection: MongoCollection<Document>) : 
   }
 
   private fun signupResponse(code: Int, message: String) = AuthResponse
-      .newBuilder()
-      .setCode(code)
-      .setMessage(message)
-      .build()
+    .newBuilder()
+    .setCode(code)
+    .setMessage(message)
+    .build()
 
   private fun createUser(request: AuthRequest, mongoCollection: MongoCollection<Document>) {
-    val userDoc = User(userId = uniqueId(),
-        phone = request.phoneNumber,
-        isVerified = false).toDocument()
+    val userDoc = User(
+      userId = uniqueId(),
+      phone = request.phoneNumber,
+      isVerified = false
+    ).toDocument()
     mongoCollection.insertOne(userDoc)
   }
 
   private fun uniqueId() =
-      UUID.randomUUID().toString()
+    UUID.randomUUID().toString()
 }
