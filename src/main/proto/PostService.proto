@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_package = "com.mutualmobile.whatsappclone.posts";
+option java_outer_classname = "Posts";
+option java_multiple_files = true;
+
+message PostRequest {
+  string caption = 1;
+  bytes fileData = 2;
+  string mimeType = 3;
+}
+
+message PostResponse {
+  int32 code = 1;
+  string message = 2;
+}
+
+service PostService {
+  rpc submitPost(PostRequest) returns (PostResponse);
+}
