@@ -10,10 +10,11 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class DatabaseModule {
+object DatabaseModule {
 
     @Provides
     @Singleton
+    @JvmStatic
     fun provideMongoClient(): MongoClient {
         val connectionString = System.getenv("mongodburi")
         return MongoClients.create(connectionString)
@@ -21,6 +22,7 @@ class DatabaseModule {
 
     @Provides
     @Singleton
+    @JvmStatic
     fun provideMongoDatabase(mongoClient: MongoClient): MongoDatabase {
         val databaseName = System.getenv("database")
         return mongoClient.getDatabase(databaseName)
@@ -29,6 +31,7 @@ class DatabaseModule {
     @Provides
     @Singleton
     @UsersMongoCollection
+    @JvmStatic
     fun provideUsersCollection(mongoDatabase: MongoDatabase) = mongoDatabase.getCollection("users")
 
 

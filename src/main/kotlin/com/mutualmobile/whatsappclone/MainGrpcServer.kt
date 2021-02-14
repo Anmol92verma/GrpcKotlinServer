@@ -5,7 +5,6 @@ import com.mutualmobile.whatsappclone.files.FileManagerServiceImpl
 import com.mutualmobile.whatsappclone.posts.PostSubmitServiceImpl
 import com.mutualmobile.whatsappclone.signup.AuthServiceImpl
 import io.grpc.ServerBuilder
-import java.io.File
 
 object MainGrpcServer {
 
@@ -13,13 +12,12 @@ object MainGrpcServer {
 
   @JvmStatic
   fun main(args: Array<String>) {
-    appComponent.inject(this)
-    val certChainFilePath = System.getenv("certChainFilePath")
-    val privateKeyFilePath = System.getenv("privateKeyFilePath")
+    //val certChainFilePath = System.getenv("certChainFilePath")
+    //val privateKeyFilePath = System.getenv("privateKeyFilePath")
 
     ServerBuilder
       .forPort(8443)
-      .useTransportSecurity(File(certChainFilePath), File(privateKeyFilePath))
+      //.useTransportSecurity(File(certChainFilePath), File(privateKeyFilePath))
       .addService(AuthServiceImpl())
       .addService(PostSubmitServiceImpl())
       .addService(FileManagerServiceImpl())
@@ -29,4 +27,6 @@ object MainGrpcServer {
         println("running on ${this.port}")
       }
   }
+
+  fun getGRPCAppComponent() = appComponent
 }

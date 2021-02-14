@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk9:latest
+FROM adoptopenjdk/openjdk11:latest
 VOLUME /tmp
 ARG JAR_FILE=target/*.jar
 COPY certs/my-public-key-cert.pem certs/my-private-key.pem /root/

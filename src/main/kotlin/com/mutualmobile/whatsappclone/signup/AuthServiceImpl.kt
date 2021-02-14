@@ -2,6 +2,7 @@ package com.mutualmobile.whatsappclone.signup
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
+import com.mutualmobile.whatsappclone.MainGrpcServer
 import com.mutualmobile.whatsappclone.di.qualifiers.UsersMongoCollection
 import com.mutualmobile.whatsappclone.models.User
 import com.mutualmobile.whatsappclone.models.toAppUser
@@ -13,13 +14,16 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class AuthServiceImpl @Inject constructor() :
+class AuthServiceImpl :
   AuthServiceGrpcKt.AuthServiceCoroutineImplBase(coroutineContext = Dispatchers.IO) {
 
   @Inject
   @UsersMongoCollection
   lateinit var mongoCollection: MongoCollection<Document>
+
+  init {
+    MainGrpcServer.getGRPCAppComponent().inject(this)
+  }
 
   override suspend fun verifyOtp(request: AuthVerify): AuthResponse {
     return try {

@@ -1,5 +1,5 @@
-#!/bin/sh
-
-./gradlew build
-docker build --build-arg JAR_FILE=build/libs/whatsappclone-0.0.1-SNAPSHOT.jar -t anmolverma/whatsappclone .
-docker run --env-file env.list -p 8443:8443 anmolverma/whatsappclone
+export database="whatsappdb"
+export mongodburi="mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb"
+export certChainFilePath="/Users/anmolverma/IdeaProjects/GrpcKotlinServer/certs/my-public-key-cert.pem"
+export privateKeyFilePath="/Users/anmolverma/IdeaProjects/GrpcKotlinServer/certs/my-private-key.pem"
+# database=whatsappdb;mongodburi=mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb;certChainFilePath=/Users/anmolverma/IdeaProjects/GrpcKotlinServer/certs/my-public-key-cert.pem;privateKeyFilePath=/Users/anmolverma/IdeaProjects/GrpcKotlinServer/certs/my-private-key.pem
